@@ -18,8 +18,8 @@
  */
 
 class dsExtDirectErrorHandler
-{
-  public static function handleError($number, $string, $file, $line, $context) {
+{ 
+  public static function handleError($errno, $errstr, $errfile, $errline, $errcontext = null) {
     throw new ErrorException($errstr, 0, $errno, $errfile, $errline); 
     die();
   }
