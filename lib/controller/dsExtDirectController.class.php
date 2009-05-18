@@ -89,6 +89,9 @@ class dsExtDirectController extends sfWebController
    */
   public function invokeRpcAction($cdata)
   {
+    // if we are in here, it is safe to switch the error handler to our own
+    set_error_handler(array('dsExtDirectErrorHandler', 'handleError'));
+
     //Load API Specs
     $api = dsExtDirectApi::getInstance();
     
@@ -161,7 +164,24 @@ class dsExtDirectController extends sfWebController
     {
       $response->type = 'exception';
       $response->message = $e->getMessage();
-      $response->where = sfConfig::get('sf_debug') ? $e->getTraceAsString() : null;
+
+      if(sfConfig::get('sf_debug')) { // show the trace only if we are debugging
+        if(sfConfig::get('app_ds_ext_direct_plugin_full_exceptions')) { 
+          // fancy exceptions will have the 'where' field structured thus:
+          // where: [{
+          //          file: file name,
+          //          line: line number,
+          //          function: function name,
+          //          args: arguments as array
+          //        }]
+          // each element is an individual call on the stack
+          $response->where = $e->getTrace();
+        } else {
+          $response->where = $e->getTraceAsString();
+        }
+      } else {
+        $response->where = null;
+      }
     }
     
     return $response;
