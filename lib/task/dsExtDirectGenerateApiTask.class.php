@@ -131,7 +131,10 @@ EOF;
     $template = sfConfig::get('sf_symfony_lib_dir').'/task/generator/skeleton/app/web/index.php';
     $pathname = sprintf('%s/%s.php', sfConfig::get('sf_web_dir'), $controller);
 
-    $this->getFilesystem()->remove($pathname);
+    if(file_exists($pathname))
+    {
+      $this->getFilesystem()->remove($pathname);
+    }
     $this->getFilesystem()->copy($template, $pathname);
     $this->getFilesystem()->replaceTokens($pathname, '##', '##', array(
       'IP_CHECK'    => '',
