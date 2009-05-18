@@ -53,17 +53,13 @@ This task also creates a front controller script in the [web/|COMMENT] directory
 
   [web/extdirect.php|INFO]
 
-You can change the name of your front controller, js & yml files by specifying a name parameter
+You can change the name of your environment, front controller, js & yml files by using the [environment|COMMENT] option:
 
-  [./symfony extdirect:generate-api yourapp api_name|INFO]
-
-You can set the environment by using the [environment|COMMENT] option:
-
-  [./symfony extdirect:generate-api yourapp --environment=extdirect|INFO]
+  [./symfony extdirect:generate-api yourapp --environment extdirect|INFO]
 
   or
 
-  [./symfony extdirect:generate-api yourapp -e=extdirect|INFO]
+  [./symfony extdirect:generate-api yourapp -e extdirect|INFO]
 
 You can enable debugging for the controller by using the [enabledebug|COMMENT] option:
 
@@ -76,7 +72,6 @@ You can enable debugging for the controller by using the [enabledebug|COMMENT] o
 EOF;
 
     $this->addArgument('application', sfCommandArgument::REQUIRED, 'The application name');
-    $this->addArgument('name', sfCommandArgument::OPTIONAL, 'The api name');
 
     $this->addOption('environment', 'e', sfCommandOption::PARAMETER_REQUIRED, 'The environment to use for webservice mode', self::DEFAULT_ENVIRONMENT);
     $this->addOption('enabledebug', 'd', sfCommandOption::PARAMETER_NONE, 'Enables debugging in generated controller');
@@ -87,7 +82,7 @@ EOF;
     $app  = $arguments['application'];
     $env  = $options['environment'];
     $dbg  = $options['enabledebug'];
-    $file = !empty($arguments['name']) ? $arguments['name'] : 'extdirect';
+    $file = $env;
     
     $this->buildControllerFile($file, $app, $env, $dbg);
     

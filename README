@@ -17,7 +17,7 @@ Configuration is simple but can include several optional parameters that add fle
 ### app.yml
 
 Configure plugin settings for the extdirect environment in your application's `app.yml` file.
-For this example we'll assume you've named your environment `'extdirect'`. This name is established when running the `generate-api` task which we will cover shortly.
+For this example we'll assume you've used the default environment name `'extdirect'`. This name can be set when running the `generate-api` task which we will cover shortly.
 
     extdirect:
       ds_ext_direct_plugin:
@@ -83,7 +83,7 @@ The `extdirect:generate-api` task performs the following operations:
 *   Builds an YAML API spec in `apps/{yourapp}/config` directory
 *   Generates a javascript API spec in the `web/js` directory
 
-There are several additional options that allow you to specify the name of the front controller / API, set the environment name, etc. See the task's help screen for more information and examples.
+There are several additional options that allow you to set the environment name, etc. See the task's help screen for more information and examples.
 
 # How requests are handled
 
