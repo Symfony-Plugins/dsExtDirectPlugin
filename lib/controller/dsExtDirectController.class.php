@@ -105,10 +105,13 @@ class dsExtDirectController extends sfWebController
       if(isset($api[$action]))
       {
         $apiAction = $api[$action];
+        
+        //Actual symfony name of action (if overridden by extdirect-action)
+        $realAction = isset($api[$action]['action']) ? $api[$action]['action'] : $action;
       }
       else 
       {
-        throw new Exception('Call to undefined action: ' . $cdata->action);
+        throw new Exception('Call to undefined action: ' . $action);
       }
       
       // Fetch method (in symfony: an 'action')
@@ -116,6 +119,9 @@ class dsExtDirectController extends sfWebController
       if(isset($apiAction['methods'][$method]))
       {
         $apiMethod = $apiAction['methods'][$method];
+        
+        //Actual symfony name of method (if overridden by extdirect-method)
+        $realMethod = isset($apiAction['method_map'][$method]) ? $apiAction['method_map'][$method] : $apiMethod;
       }
       else
       {
@@ -144,9 +150,9 @@ class dsExtDirectController extends sfWebController
       //Call symfony action
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array(sprintf('Forwarding to "%s/%s".', $action, $method))));
+        $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array(sprintf('Forwarding to "%s/%s".', $realAction, $realMethod))));
       }
-      $this->forward($action, $method);
+      $this->forward($realAction, $realMethod);
       
       //Get the action
       $actionInstance = $this->getActionStack()->getLastEntry()->getActionInstance();
@@ -154,7 +160,7 @@ class dsExtDirectController extends sfWebController
       //Throw an exception if we've reached the 404 module
       if($actionInstance->getModuleName() == sfConfig::get('sf_error_404_module') && $actionInstance->getActionName() == sfConfig::get('sf_error_404_action'))
       {
-        throw new sfError404Exception("Call to undefined method: $method on action: $action");
+        throw new sfError404Exception("Call to undefined method: $realMethod on action: $realAction");
       }
       
       

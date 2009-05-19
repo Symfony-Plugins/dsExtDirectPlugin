@@ -92,25 +92,41 @@ EOF;
       if($this->loadModuleClassFile($module))
       { 
         $class = new ReflectionClass($module.'Actions');
+        $class_comments = $class->getDocComment();
         foreach($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method)
         {
-          $comments = $method->getDocComment();
+          $method_comments = $method->getDocComment();
           
-          if(strpos($comments, '@extdirect-enable') !== false)
+          if(strpos($method_comments, '@extdirect-enable') !== false)
           {
-            preg_match('/@extdirect-len (?P<len>\\d*)/', $comments, $method_len);
+            //Get custom action name, if any
+            preg_match('/@extdirect-action (?P<action>[_\\w]*)/', $class_comments, $action_name);
+            $action_name = isset($action_name['action']) && !empty($action_name['action']) ? $action_name['action'] : $module;
+            
+            //Get custom method name, if any
+            $real_method_name = $this->getShortMethodName($method->getName());
+            preg_match('/@extdirect-method (?P<method>[_\\w]*)/', $method_comments, $method_name);
+            $method_name = isset($method_name['method']) && !empty($method_name['method']) ? $method_name['method'] : $real_method_name;
+            
+            preg_match('/@extdirect-len (?P<len>\\d*)/', $method_comments, $method_len);
             $method_len = isset($method_len['len']) && !empty($method_len['len']) ? $method_len['len'] : 0;
-            $method_name = $this->getShortMethodName($method->getName());
-            $method_fh = strpos($comments, '@extdirect-formhandler') !== false ? true : false;
+            
+            $method_fh = strpos($method_comments, '@extdirect-formhandler') !== false ? true : false;
+            
             $method_def = array('len' => $method_len, 'formHandler' => $method_fh);
             
-            if(!isset($api[$module]))
+            if(!isset($api[$action_name]))
             {
-              $api[$module] = array('methods' => array($method_name => $method_def));
+              // 'action' value in array equals the real name of the action ($module) since $action_name can be custom
+              $api[$action_name] = array(
+              	'action' => $module,
+              	'methods' => array($method_name => $method_def),
+                'method_map' => array($method_name => $real_method_name));//Maps custom method name to real method name
             }
             else 
             {
-              $api[$module]['methods'][$method_name] = $method_def;
+              $api[$action_name]['methods'][$method_name] = $method_def;
+              $api[$action_name]['method_map'][$method_name] = $real_method_name;
             }
           }
         }

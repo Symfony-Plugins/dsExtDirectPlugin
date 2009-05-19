@@ -48,6 +48,7 @@ Before running the `extdirect:generate-api` task we need to define some actions 
 	   * Multiplies a number by 8
 	   * 
 	   * @extdirect-enable
+	   * @extdirect-len 1
 	   *
 	   */
 	  public function executeMultiply()
@@ -67,13 +68,18 @@ Before running the `extdirect:generate-api` task we need to define some actions 
 	
 By simply adding `@extdirect-enable` to the comments above the action method the `extdirect:generate-api` task knows to include this method into the API spec.
 
-### Doc comment options include:
+### Method-level doc comment options include:
 
 *    `@extdirect-enable` - flags the action method for inclusion in the API spec.
+*    `@extdirect-method` {string method name} - Optional. Allows you to set a custom method name.
 *    `@extdirect-len` {int length} - Optional. Tells Ext.Direct the number of parameters to expect when generating the request. (Omitting this parameter defaults to 0).
 *    `@extdirect-formhandler` - Optional. Flags the method as a formhandler method. This is important when dealing with how we handle the sfRequest parameters as discussed later. (Omitting this sets the formHandler to false in the API spec - this should be omitted unless you know what it means)
 
-Now that we've added our doc comment, let's run the `extdirect:generate-api` task:
+### Action-level doc comment options include:
+
+*    `@extdirect-action` {string action name} - Optional. Allows you to set a custom action name.
+
+Now that we've added our doc comments, let's run the `extdirect:generate-api` task:
 
     > symfony extdirect:generate-api frontend extdirect
 
