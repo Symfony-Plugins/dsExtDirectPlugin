@@ -10,10 +10,10 @@
   <email>danhstevens@gmail.com</email>
   <active>yes</active>
  </lead>
- <date>2009-05-01</date>
- <time>13:46:56</time>
+ <date>2009-05-20</date>
+ <time>15:31:58</time>
  <version>
-  <release>1.0.0</release>
+  <release>1.0.1</release>
   <api>1.0.0</api>
  </version>
  <stability>
@@ -28,6 +28,7 @@
    <file role="data" name="LICENSE" />
    <dir name="lib">
 	  <file role="data" name="dsExtDirectApi.class.php" />
+	  <file role="data" name="dsExtDirectErrorHandler.class.php" />
   	<file role="data" name="dsExtDirectRouter.class.php" />
     <dir name="adapter">
      <file role="data" name="dsAbstractResultAdapter.class.php" />
@@ -60,5 +61,36 @@
   </required>
  </dependencies>
  <phprelease />
- <changelog />
+ <changelog>
+  <release>
+   <version>
+    <release>1.0.0</release>
+    <api>1.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.symfony-project.com/license">MIT license</license>
+   <license>MIT</license>
+   <date>2009-05-01</date>
+   <notes>* First release of dsExtDirectPlugin</notes>
+  </release>
+  <release>
+   <version>
+    <release>1.0.1</release>
+    <api>1.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.symfony-project.com/license">MIT license</license>
+   <license>MIT</license>
+   <date>2009-05-20</date>
+   <notes>* Added more comprehensive error handling
+	* Removed name parameter from generator to prevent confusion
+	* Added @extdirect-action option to customize action name and @extdirect-method to customize method name</notes>
+  </release>
+ </changelog>
 </package>
