@@ -169,9 +169,11 @@ class dsExtDirectController extends sfWebController
     catch (Exception $e)
     {
       $response->type = 'exception';
-      $response->message = $e->getMessage();
 
-      if(sfConfig::get('sf_debug')) { // show the trace only if we are debugging
+      if(sfConfig::get('sf_debug')) { // show the trace and message only if we are debugging
+        
+        $response->message = $e->getMessage();
+        
         if(sfConfig::get('app_ds_ext_direct_plugin_full_exceptions')) { 
           // fancy exceptions will have the 'where' field structured thus:
           // where: [{
@@ -182,10 +184,15 @@ class dsExtDirectController extends sfWebController
           //        }]
           // each element is an individual call on the stack
           $response->where = $e->getTrace();
-        } else {
+        }
+        else
+        {
           $response->where = $e->getTraceAsString();
         }
-      } else {
+      }
+      else
+      {
+        $response->message = null;
         $response->where = null;
       }
     }
