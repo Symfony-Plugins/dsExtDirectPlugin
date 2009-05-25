@@ -87,12 +87,16 @@ EOF;
     $this->buildControllerFile($file, $app, $env, $dbg);
     
     $api = array();
-    foreach($this->getModules() as $module)
+    foreach(array_merge($this->getModules(),$this->getPluginModules()) as $module)
     {
       if($this->loadModuleClassFile($module))
       { 
+        //now we will use the actual module name as $module instead of its abs path
+        $module = substr(strrchr($module,'/'),1);
+        
         $class = new ReflectionClass($module.'Actions');
         $class_comments = $class->getDocComment();
+        
         foreach($class->getMethods(ReflectionMethod::IS_PUBLIC) as $method)
         {
           $method_comments = $method->getDocComment();
@@ -203,12 +207,25 @@ EOF;
   
   protected function getModules()
   {
-    return sfFinder::type('directory')->name('*')->relative()->maxdepth(0)->in(sfConfig::get('sf_app_module_dir'));
+    return sfFinder::type('directory')->name('*')->maxdepth(0)->in(sfConfig::get('sf_app_module_dir'));
+  }
+  
+  protected function getPluginModules()
+  {
+    $plugins = sfFinder::type('directory')->name('*')->maxdepth(0)->in(sfConfig::get('sf_plugins_dir'));
+    $modules = array();
+
+    foreach($plugins as $plugin)
+    {
+      $modules = array_merge($modules,sfFinder::type('directory')->name(sfConfig::get('sf_enabled_modules'))->maxdepth(0)->in($plugin.'/modules'));
+    }
+
+    return $modules;
   }
   
   protected function loadModuleClassFile($module)
   {
-    $module_classfile = sfConfig::get('sf_app_module_dir').'/'.$module.'/actions/actions.class.php';
+    $module_classfile = $module.'/actions/actions.class.php';
 
     return file_exists($module_classfile) && !preg_match('/class(.*)Actions(.*)extends(.*)auto/', file_get_contents($module_classfile)) ? require_once($module_classfile) : false;
   }
