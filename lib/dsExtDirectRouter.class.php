@@ -43,7 +43,7 @@ class dsExtDirectRouter
       
       // Is this an upload?
       $extUpload = $sfRequest->getParameter('extUpload');
-      self::$isUpload = ! empty($extUpload) === true;
+      self::$isUpload = $extUpload == "true";
       
       //Create a data object
       self::$data = new stdClass();
