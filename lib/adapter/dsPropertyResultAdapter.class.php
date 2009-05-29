@@ -65,6 +65,10 @@ class dsPropertyResultAdapter extends dsAbstractResultAdapter
     {
       $result = $vars[$this->getResultProperty()];
     }
+    else 
+    {
+      throw new Exception("No result property set in module '" . $action->getModuleName() . "' on action '" . $action->getActionName() . "'.");
+    }
     
     return $result;
   }

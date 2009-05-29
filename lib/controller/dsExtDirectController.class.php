@@ -154,47 +154,85 @@ class dsExtDirectController extends sfWebController
       }
       $this->forward($realAction, $realMethod);
       
-      //Get the action
-      $actionInstance = $this->getActionStack()->getLastEntry()->getActionInstance();
-      
-      //Throw an exception if we've reached the 404 module
-      if($actionInstance->getModuleName() == sfConfig::get('sf_error_404_module') && $actionInstance->getActionName() == sfConfig::get('sf_error_404_action'))
+      $response->result = $this->getResult($realMethod, $realAction);
+    }
+    catch (sfStopException $e)
+    {
+      //If we're in sfStopException, then the action or a filter has probably called a forward
+      //so let's try to grab a result anyways and keep on truckin'
+      try
       {
-        throw new sfError404Exception("Call to undefined method: $realMethod on action: $realAction");
+        $response->result = $this->getResult($realMethod, $realAction);
       }
-      
-      
-      $response->result = $this->getResultAdapter()->getResult($actionInstance);
+      catch (Exception $e)
+      {
+        $response = $this->generateException($response, $e);
+      }
     }
     catch (Exception $e)
     {
-      $response->type = 'exception';
+      $response = $this->generateException($response, $e);
+    }
+    
+    return $response;
+  }
+  
+  /**
+   * Gets the result data via the defined result adapter
+   *
+   * @param string $method
+   * @param string $action
+   * @return mixed Result data
+   */
+  protected function getResult($method, $action)
+  {
+    //Get the action
+    $actionInstance = $this->getActionStack()->getLastEntry()->getActionInstance();
+      
+    //Throw an exception if we've reached the 404 module
+    if($actionInstance->getModuleName() == sfConfig::get('sf_error_404_module') && $actionInstance->getActionName() == sfConfig::get('sf_error_404_action'))
+    {
+      throw new sfError404Exception("Call to undefined method: $method on action: $action");
+    }
+    
+    return $this->getResultAdapter()->getResult($actionInstance);
+  }
+  
+  /**
+   * Generates an exception response object in an Ext.Direct-friendly format
+   *
+   * @param stdClass $response
+   * @param Exception $e
+   * @return stdClass Response
+   */
+  protected function generateException(stdClass $response, Exception $e)
+  {
+    $response->type = 'exception';
 
-      if(sfConfig::get('sf_debug')) { // show the trace and message only if we are debugging
+    if(sfConfig::get('sf_debug')) { // show the trace and message only if we are debugging
         
-        $response->message = $e->getMessage();
+      $response->message = $e->getMessage();
         
-        if(sfConfig::get('app_ds_ext_direct_plugin_full_exceptions')) { 
-          // fancy exceptions will have the 'where' field structured thus:
-          // where: [{
-          //          file: file name,
-          //          line: line number,
-          //          function: function name,
-          //          args: arguments as array
-          //        }]
-          // each element is an individual call on the stack
-          $response->where = $e->getTrace();
-        }
-        else
-        {
-          $response->where = $e->getTraceAsString();
-        }
+      if(sfConfig::get('app_ds_ext_direct_plugin_full_exceptions')) { 
+        // fancy exceptions will have the 'where' field structured thus:
+        // where: [{
+        //          file: file name,
+        //          line: line number,
+        //          function: function name,
+        //          args: arguments as array
+        //        }]
+        // each element is an individual call on the stack
+        $response->where = $e->getTrace();
       }
       else
       {
-        $response->message = null;
-        $response->where = null;
+        $response->where = $e->getTraceAsString();
       }
+    }
+    else
+    {
+      $response->message = null;
+      $response->where = null;
     }
     
     return $response;
