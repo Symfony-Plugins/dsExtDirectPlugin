@@ -88,10 +88,12 @@ class dsExtDirectRouter
     // Return results
     if(self::$isForm && self::$isUpload)
     {
-      return '<html><body><textarea>'.json_encode(self::$response).'</textarea></body></html>';
+      echo '<html><body><textarea>'.json_encode(self::$response).'</textarea></body></html>';
     }
-    
-    echo json_encode(self::$response);
+    else 
+    {
+      echo json_encode(self::$response);
+    }
   }
 
   public static function isForm()
