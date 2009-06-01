@@ -20,6 +20,12 @@
 class dsExtDirectErrorHandler
 { 
   public static function handleError($errno, $errstr, $errfile, $errline, $errcontext = null) {
+    // If errors are suppressed or error reporting is not set do not throw error
+    if(($errno & error_reporting()) === 0)
+    {
+      return false;
+    }
+    
     throw new ErrorException($errstr, 0, $errno, $errfile, $errline); 
     die();
   }
