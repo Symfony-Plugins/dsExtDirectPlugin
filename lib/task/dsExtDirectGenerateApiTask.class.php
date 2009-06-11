@@ -179,7 +179,7 @@ EOF;
       {
         $methodDef = array(
           'name' => $methodName,
-          'len' => isset($method['len']) ? $method['len'] : 0
+          'len' => isset($method['len']) ? (int)$method['len'] : 0
         );
         
         if(isset($method['formHandler']) && $method['formHandler'])

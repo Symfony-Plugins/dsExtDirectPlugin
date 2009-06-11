@@ -81,7 +81,7 @@ By simply adding `@extdirect-enable` to the comments above the action method the
 
 Now that we've added our doc comments, let's run the `extdirect:generate-api` task:
 
-    > symfony extdirect:generate-api frontend extdirect
+    > symfony extdirect:generate-api frontend
 
 The `extdirect:generate-api` task performs the following operations:
 
