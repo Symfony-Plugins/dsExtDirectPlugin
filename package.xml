@@ -92,5 +92,25 @@
 	* Removed name parameter from generator to prevent confusion
 	* Added @extdirect-action option to customize action name and @extdirect-method to customize method name</notes>
   </release>
+  <release>
+   <version>
+    <release>1.0.2</release>
+    <api>1.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.symfony-project.com/license">MIT license</license>
+   <license>MIT</license>
+   <date>2009-06-14</date>
+   <notes>* Added ability to look inside plugins for extdirect-enable actions
+	* Removed messages from exceptions in non-debug mode
+	* Added better exception handling for forwards from an action or filter
+	* Fixed bug where a formhandler request may be falsely interpreted as a file upload
+	* Fixed bug where file upload requests were failing
+	* Enhanced error handler to not throw exception for PHP errors if errors are suppressed
+	* Fixed bug where len value was cast as a string causing Ext would throw this.onRead error</notes>
+  </release>
  </changelog>
 </package>
