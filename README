@@ -16,13 +16,15 @@ Configuration is simple but can include several optional parameters that add fle
 
 ### app.yml
 
-Configure plugin settings for the extdirect environment in your application's `app.yml` file.
-For this example we'll assume you've used the default environment name `'extdirect'`. This name can be set when running the `generate-api` task which we will cover shortly.
+Configure plugin settings in your application's `app.yml` file.
 
-    extdirect:
+    all:
       ds_ext_direct_plugin:
 		    # Optional. Only use this parameter if you intend to create a mod_rewrite our route to a different URL for your extdirect front controller.
 		    #router_url: /extdirect.php
+		    
+		    # Optional. Namespace for direct actions (ex: myNs.myAction.myMethod();)
+    		#action_namespace: myNs
 
 		    # Optional. Set the javascript variable name for the js api spec (defaults to 'Ext.app.{YOUR_API_NAME}_API)
 		    #js_var: Ext.app.EXTDIRECT_API

@@ -198,6 +198,10 @@ EOF;
       'actions' => $actions
     );
     
+    //Add namespace, if defined
+    $ns = sfConfig::get('app_ds_ext_direct_plugin_action_namespace');
+    if(!is_null($ns)) $config['namespace'] = $ns;
+    
     $js = sfConfig::get('app_ds_ext_direct_plugin_js_var', 'Ext.app.'.strtoupper($file).'_API') . ' = ' . json_encode($config) . ';';
     
     $path = sfConfig::get('sf_web_dir').'/js/'.$file.'_api.js';
