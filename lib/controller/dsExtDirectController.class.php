@@ -20,6 +20,7 @@
 class dsExtDirectController extends sfWebController
 {
   protected $resultAdapter = null;
+  public $numeric = array();
   
   /**
    * Initializes this controller.
@@ -140,10 +141,8 @@ class dsExtDirectController extends sfWebController
         
         if(isset($cdata->data) && is_array($cdata->data))
         {
-          foreach ($cdata->data[0] as $key => $val)
-          {
-            $this->context->getRequest()->setParameter($key, $val);
-          }
+          $this->addResultParameter($cdata->data);
+          $this->transferNumericParameters();
         }
       }
       
@@ -247,6 +246,38 @@ class dsExtDirectController extends sfWebController
   {
     
   }
+  
+  public function addResultParameter($data) {
+  	if (count($data) == 1 && is_array($data[0])) {
+  		$data = array($data);
+  	}
+  	$data = $this->stdClassToArray($data);
+  	foreach ($data as $key=>$item) {
+  		if (is_array($item)) {
+	  		foreach ($item as $key=>$value) {
+	  			$this->context->getRequest()->setParameter($key, $value);
+	  		}
+  		} else {
+  			$this->numeric[$key] = $item;
+  		}
+  	}
+  }
+  
+  public function stdClassToArray($stdClass) {
+  	$array = array();
+  	foreach ($stdClass as $key=>$value) {
+  		if ($value instanceOf stdClass) {
+  			$value = $this->stdClassToArray($value);
+  		}
+  		$array[$key] = $value;
+  	}
+  	return $array;
+  }
+  
+  public function transferNumericParameters() {
+  	$this->context->getRequest()->setParameter('numeric', $this->numeric);
+  }
+  
 }
 
 ?>
