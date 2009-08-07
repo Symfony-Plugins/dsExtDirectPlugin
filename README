@@ -107,7 +107,7 @@ Example Ext.Direct Call:
 		});
 	  // ...
 
-Notice the call to `directTest.multiply` and the parameters `number` and `another_val`. When the call is made, these values will be accessible via `$this->getRequstParamter()` from within the action:
+Notice the call to `directTest.multiply` and the parameters `number` and `another_val`. When the call is made, these values will be accessible via `$this->getRequestParameter()` from within the action:
 
     [php]
     public function executeMultiply()
@@ -141,7 +141,7 @@ Parameters from such a call can be retrieved like this:
       $bar = $numeric[2];                                                   // Notice that indexes are maintained
     }
 
-There are two rules to follow. First, avoid naming your object properties 'numeric', because numeric parameter holder will overwrite those. Second, if you pass two objects as arguments to an Ext.Direct call (as shown in last example), their first-level properties' names should not match. If you still need to pass two objects with same property names, you can pass {objects: [obj1, obj2]} as parameter.
+There are two rules to follow. First, avoid naming your object properties `numeric`, because numeric parameter holder will overwrite those. Second, if you pass two objects as arguments to an Ext.Direct call (as shown in last example), their first-level properties' names should not match. If you still need to pass two objects with same property names, you can pass `{objects: [obj1, obj2]}` as parameter.
 
 # Action results
 
