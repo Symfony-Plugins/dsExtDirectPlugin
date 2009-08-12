@@ -117,32 +117,6 @@ Notice the call to `directTest.multiply` and the parameters `number` and `anothe
       // ...
     }
 
-Also, here is a more complex example:
-
-    [javascript]
-    // ...
-		handler: function(){
-		  directTest.process('foo', {zig: 'zag', other: {level2: {level3: 'value'}}}, 'bar', {another: 'mil'} function(result, e){
-		    // ...
-		});
-	  // ...
-
-Parameters from such a call can be retrieved like this:
-
-    [php]
-    public function executeProcess()
-    {
-      $zig         = $this->getRequestParameter('zag');        // Simple one, just like in previous example
-      $other = $this->getRequestParameter('other');          // Associative array
-      $level3 = $other['level2']['level3'];                             // 'value'
-      $another = $this->getRequestParameter('another');   // 'mil'
-      $numeric = $this->getRequestParameters('numeric');  // Contains all parameters not enclosed in {}'s (non-objects)
-      $foo = $numeric[0];                                                    // 'foo'
-      $bar = $numeric[2];                                                   // Notice that indexes are maintained
-    }
-
-There are two rules to follow. First, avoid naming your object properties `numeric`, because numeric parameter holder will overwrite those. Second, if you pass two objects as arguments to an Ext.Direct call (as shown in last example), their first-level properties' names should not match. If you still need to pass two objects with same property names, you can pass `{objects: [obj1, obj2]}` as parameter.
-
 # Action results
 
 In symfony, the default return value of an action is a pointer to a template. Therefore the `dsExtDirectPlugin` relies on result adapters to retrieve the action results. The plugin is bundled with property result adapter that, by default, will enable the plugin to retrieve the value assigned to `$this->result` in the action method.

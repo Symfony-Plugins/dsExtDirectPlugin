@@ -20,7 +20,6 @@
 class dsExtDirectController extends sfWebController
 {
   protected $resultAdapter = null;
-  public $numeric = array();
   
   /**
    * Initializes this controller.
@@ -141,8 +140,10 @@ class dsExtDirectController extends sfWebController
         
         if(isset($cdata->data) && is_array($cdata->data))
         {
-          $this->addResultParameter($cdata->data);
-          $this->transferNumericParameters();
+          foreach ($cdata->data[0] as $key => $val) 
+					{ 
+					  $this->context->getRequest()->setParameter($key, $val); 
+					}
         }
       }
       
@@ -245,82 +246,6 @@ class dsExtDirectController extends sfWebController
   public function redirect($url, $delay = 0, $statusCode = 302)
   {
     
-  }
-  
-
-  /**
-   * Takes all data passed by Ext in "data" property of request and parses it.
-   * Named parameters are added by their names, but only the first level of them.
-   * Numeric parameters are added to 'numeric' parameter preserving their position.
-   * 
-   * @example
-   * If data: [{foo: "bar", zig: "zag"}]
-   * Then you can access "bar" as $request->getParameter('foo')
-   * This was a suggested way to pass params, so existing code should work without modifications. 
-   * 
-   * If data: ["bar", "zag"]
-   * Then you can access "bar" as $numeric = $request->getParameter('numeric'); $numeric[0]
-   * Don't forget to set extdirect-len to 2.
-   * 
-   * If data: ["zag", {foo: "bar", coo: "mar"}]
-   * Then you can access "bar" as $request->getParameter('foo')
-   * And "zag" as $numeric = $request->getParameter('numeric'); $numeric[0]
-   * This also requires extdirect-len being set to 2.
-   * Note that amount of accessible parameters differs from extdirect-len, as the latter only sets the amount of items in data array (an object at index 1 has two properties, but still occupies only one data array index). 
-   * 
-   * If data: [{foo: "bar", coo: "mar"}, "zag"]
-   * Then you can access "bar" as $request->getParameter('foo') //same as previous
-   * And "zag" as $numeric = $request->getParameter('numeric'); $numeric[1] //NOT the same as previous
-   * 
-   * If data: [{foo: {level2: {level3: "bar"}}, coo: "mar"}, "zag"]
-   * Then you can access "bar" as $foo = $request->getParameter('foo'); $foo['level1']['level2']
-   * 
-   * @param $data
-   * @return none
-   */
-  public function addResultParameter(stdClass $data)
-  {
-  	if (count($data) == 1 && is_array($data[0])) {
-  		$data = array($data);
-  	}
-  	$data = $this->stdClassToArray($data);
-  	foreach ($data as $key=>$item) {
-  		if (is_array($item)) {
-	  		foreach ($item as $key=>$value) {
-	  			$this->context->getRequest()->setParameter($key, $value);
-	  		}
-  		} else {
-  			$this->numeric[$key] = $item;
-  		}
-  	}
-  }
-  
-  /**
-   * Utility method. Converts stdClass to associative array.
-   * 
-   * @param stdClass $stdClass
-   * @return array
-   */
-  public function stdClassToArray(stdClass $stdClass)
-  {
-  	$array = array();
-  	foreach ($stdClass as $key=>$value) {
-  		if ($value instanceOf stdClass) {
-  			$value = $this->stdClassToArray($value);
-  		}
-  		$array[$key] = $value;
-  	}
-  	return $array;
-  }
-  
-  /**
-   * Sets 'numeric' parameter containing all numeric parameters from data array.
-   * 
-   * @return none
-   */
-  public function transferNumericParameters()
-  {
-  	$this->context->getRequest()->setParameter('numeric', $this->numeric);
   }
   
 }
