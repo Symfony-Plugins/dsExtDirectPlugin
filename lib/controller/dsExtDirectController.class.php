@@ -140,10 +140,14 @@ class dsExtDirectController extends sfWebController
         
         if(isset($cdata->data) && is_array($cdata->data))
         {
+          //Create _raw request parameter for full access to request data
+          $this->context->getRequest()->setParameter('_raw', $cdata->data); 
+          
+          //Parse object literals into key/val pairs
           foreach ($cdata->data[0] as $key => $val) 
-					{ 
-					  $this->context->getRequest()->setParameter($key, $val); 
-					}
+		  { 
+		    $this->context->getRequest()->setParameter($key, $val); 
+          }
         }
       }
       
