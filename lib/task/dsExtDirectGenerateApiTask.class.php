@@ -216,12 +216,20 @@ EOF;
   
   protected function getPluginModules()
   {
+    $include = sfConfig::get('app_ds_ext_direct_plugin_include_plugins');
+    
+    if(empty($include) || !is_array($include)) return array();
+    
     $plugins = sfFinder::type('directory')->name('*')->maxdepth(0)->in(sfConfig::get('sf_plugins_dir'));
     $modules = array();
-
+    
     foreach($plugins as $plugin)
     {
-      $modules = array_merge($modules,sfFinder::type('directory')->name(sfConfig::get('sf_enabled_modules'))->maxdepth(0)->in($plugin.'/modules'));
+      $pluginName = substr(strrchr($plugin,'/'), 1);
+      if(in_array($pluginName, $include))
+      {
+        $modules = array_merge($modules,sfFinder::type('directory')->name(sfConfig::get('sf_enabled_modules'))->maxdepth(0)->in($plugin.'/modules'));
+      }
     }
 
     return $modules;
@@ -230,8 +238,22 @@ EOF;
   protected function loadModuleClassFile($module)
   {
     $module_classfile = $module.'/actions/actions.class.php';
+    
+    if(file_exists($module_classfile) && !preg_match('/class(.*)Actions(.*)extends(.*)auto/', file_get_contents($module_classfile)))
+    {
+      require_once($module_classfile);
+      
+      //Get module's action class name from module absolute path
+      $actionClass = substr(strrchr($module,'/'), 1) . 'Actions';
+      
+      //Verify Actions class for module exists / is loaded
+      if(class_exists($actionClass))
+      {
+        return true;
+      }
+    }
 
-    return file_exists($module_classfile) && !preg_match('/class(.*)Actions(.*)extends(.*)auto/', file_get_contents($module_classfile)) ? require_once($module_classfile) : false;
+    return false;
   }
   
   protected function loadModuleConfigFile($module)

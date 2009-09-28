@@ -31,6 +31,10 @@ Configure plugin settings in your application's `app.yml` file.
 
 		    # Optional. Set a provider_type (defaults to remoting)
 		    #provider_type: remoting
+    
+		    # Optional. List plugins who's action classes you want included in API generation (defaults to null)
+		    # ex: include_plugins: [sfGuardPlugin]
+		    #include_plugins: ~
 		
 ### factories.yml
 
