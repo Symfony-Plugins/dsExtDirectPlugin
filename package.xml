@@ -10,10 +10,10 @@
   <email>danhstevens@gmail.com</email>
   <active>yes</active>
  </lead>
- <date>2009-06-14</date>
- <time>19:03:58</time>
+ <date>2009-09-30</date>
+ <time>17:00:00</time>
  <version>
-  <release>1.0.2</release>
+  <release>1.0.3</release>
   <api>1.0.0</api>
  </version>
  <stability>
@@ -76,6 +76,7 @@
    <date>2009-05-01</date>
    <notes>* First release of dsExtDirectPlugin</notes>
   </release>
+
   <release>
    <version>
     <release>1.0.1</release>
@@ -92,6 +93,7 @@
 	* Removed name parameter from generator to prevent confusion
 	* Added @extdirect-action option to customize action name and @extdirect-method to customize method name</notes>
   </release>
+
   <release>
    <version>
     <release>1.0.2</release>
@@ -103,7 +105,7 @@
    </stability>
    <license uri="http://www.symfony-project.com/license">MIT license</license>
    <license>MIT</license>
-   <date>2009-06-14</date>
+   <date>2009-09-30</date>
    <notes>* Added ability to look inside plugins for extdirect-enable actions
 	* Removed messages from exceptions in non-debug mode
 	* Added better exception handling for forwards from an action or filter
@@ -111,6 +113,24 @@
 	* Fixed bug where file upload requests were failing
 	* Enhanced error handler to not throw exception for PHP errors if errors are suppressed
 	* Fixed bug where len value was cast as a string causing Ext would throw this.onRead error</notes>
+  </release>
+  <release>
+   <version>
+    <release>1.0.3</release>
+    <api>1.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.symfony-project.com/license">MIT license</license>
+   <license>MIT</license>
+   <date>2009-09-30</date>
+   <notes>* Added _raw request parameter for access to all request data
+	* Removed automatic scanning of all plugins in favor of manually specified plugins (to prevent failed API generation for some plugins using auto classes)
+	* Removed error handler - caused too many issues with external libraries
+	* Added action namespace support
+	* Fixed bug where app.yml params were not being pulled because of environment</notes>
   </release>
  </changelog>
 </package>
