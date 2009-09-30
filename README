@@ -125,6 +125,24 @@ Notice the call to `directTest.multiply` and the parameters `number` and `anothe
       // ...
     }
 
+## Getting Raw Request Data
+
+In some cases you may prefer to access the raw request data instead of fetching parameters one at a time. This is especially useful if you have complex request data (nested arrays, etc) or data that is not in a key/value pair (as is seen in some components such as ExtÕs Tree). Accessing raw request data couldnÕt be easier:
+
+    [php]
+    $raw = $this->getRequestParameter('_raw');
+
+That said, hereÕs another way of accessing the parameters in the previous executeMultiply example using the _raw request data:
+
+    [php]
+    public function executeMultiply()
+    {
+      $raw         = $this->getRequestParameter('_raw');
+      $num         = $raw[0]->number;
+      $another_val = $raw[0]->another_val;
+      // ...
+    }
+
 # Action results
 
 In symfony, the default return value of an action is a pointer to a template. Therefore the `dsExtDirectPlugin` relies on result adapters to retrieve the action results. The plugin is bundled with property result adapter that, by default, will enable the plugin to retrieve the value assigned to `$this->result` in the action method.
