@@ -127,12 +127,12 @@ Notice the call to `directTest.multiply` and the parameters `number` and `anothe
 
 ## Getting Raw Request Data
 
-In some cases you may prefer to access the raw request data instead of fetching parameters one at a time. This is especially useful if you have complex request data (nested arrays, etc) or data that is not in a key/value pair (as is seen in some components such as Ext’s Tree). Accessing raw request data couldn’t be easier:
+In some cases you may prefer to access the raw request data instead of fetching parameters one at a time. This is especially useful if you have complex request data (nested arrays, etc) or data that is not in a key/value pair (as is seen in some components such as Ext's Tree). Accessing raw request data couldn't be easier:
 
     [php]
     $raw = $this->getRequestParameter('_raw');
 
-That said, here’s another way of accessing the parameters in the previous executeMultiply example using the _raw request data:
+That said, here's another way of accessing the parameters in the previous executeMultiply example using the _raw request data:
 
     [php]
     public function executeMultiply()

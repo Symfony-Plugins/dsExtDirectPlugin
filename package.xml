@@ -13,7 +13,7 @@
  <date>2009-09-30</date>
  <time>17:00:00</time>
  <version>
-  <release>1.0.3</release>
+  <release>1.0.4</release>
   <api>1.0.0</api>
  </version>
  <stability>
@@ -116,7 +116,7 @@
   </release>
   <release>
    <version>
-    <release>1.0.3</release>
+    <release>1.0.4</release>
     <api>1.0.0</api>
    </version>
    <stability>
