@@ -202,11 +202,21 @@ EOF;
     $ns = sfConfig::get('app_ds_ext_direct_plugin_action_namespace');
     if(!is_null($ns)) $config['namespace'] = $ns;
     
-    $js = sfConfig::get('app_ds_ext_direct_plugin_js_var', 'Ext.app.'.strtoupper($file).'_API') . ' = ' . json_encode($config) . ';';
+    $descriptor = sfConfig::get('app_ds_ext_direct_plugin_js_var', 'Ext.app.'.strtoupper($file).'_API');
     
+    $js = $descriptor . ' = ' . json_encode($config) . ';';
+    
+    //Create JS File
     $path = sfConfig::get('sf_web_dir').'/js/'.$file.'_api.js';
     file_put_contents($path, $js);
     $this->logSection('extdirect', 'Generated JS API Spec: '.$path);
+    
+    //Creat JSON file (Ext Direct 1.0.1 spec)
+    $config['descriptor'] = $descriptor;
+    $json = json_encode($config);
+    $path = sfConfig::get('sf_web_dir').'/js/'.$file.'_api.json';
+    file_put_contents($path, $json);
+    $this->logSection('extdirect', 'Generated JSON API Spec: '.$path);
   }
   
   protected function getModules()
