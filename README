@@ -1,4 +1,4 @@
-# dsExtDirectPlugin (for symfony 1.1/1.2 and Ext Js 3.x)
+# dsExtDirectPlugin (for symfony 1.1 - 1.4 and Ext Js 3.x)
 
 Ext.Direct provides a single interface to build AJAX-driven applications in Ext Js 3.x quickly and reliably
 
@@ -36,6 +36,7 @@ Configure plugin settings in your application's `app.yml` file.
 		    # ex: include_plugins: [sfGuardPlugin]
 		    #include_plugins: ~
 		
+
 ### factories.yml
 
 Enable the `dsExtDirectController` for your enironment.
@@ -124,6 +125,7 @@ Notice the call to `directTest.multiply` and the parameters `number` and `anothe
       $another_val = $this->getRequestParameter('another_val');
       // ...
     }
+
 
 ## Getting Raw Request Data
 
