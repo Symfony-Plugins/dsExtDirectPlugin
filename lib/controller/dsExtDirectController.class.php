@@ -90,7 +90,8 @@ class dsExtDirectController extends sfWebController
   public function invokeRpcAction($cdata)
   {
     // if we are in here, it is safe to switch the error handler to our own
-    set_error_handler(array('dsExtDirectErrorHandler', 'handleError'));
+    //set_error_handler(array('dsExtDirectErrorHandler', 'handleError'));
+    //^^ Causes problems with pear modules - removed for now
 
     //Load API Specs
     $api = dsExtDirectApi::getInstance();
