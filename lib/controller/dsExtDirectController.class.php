@@ -20,7 +20,7 @@
 class dsExtDirectController extends sfWebController
 {
   protected $resultAdapter = null;
-  
+
   /**
    * Initializes this controller.
    *
@@ -29,11 +29,11 @@ class dsExtDirectController extends sfWebController
   public function initialize($context)
   {
     parent::initialize($context);
-    
+
     //Allow many forwards since a single request may constitute several forwards
     $this->maxForwards = 50;
   }
-  
+
   /**
    * Gets the result adapter for the action
    *
@@ -48,18 +48,18 @@ class dsExtDirectController extends sfWebController
       $param = isset($result['param']) ? $result['param'] : array();
 
       $adapter = new $class($param);
-      
+
       $this->resultAdapter = $adapter instanceof dsAbstractResultAdapter ? $adapter : new dsPropertyResultAdapter();
     }
-    
+
     return $this->resultAdapter;
   }
-  
+
   public function getRenderMode()
   {
     return $this->getResultAdapter()->getRenderMode();
   }
-  
+
   /**
    * Handles RPC requests & sends response
    */
@@ -69,7 +69,7 @@ class dsExtDirectController extends sfWebController
     {
       $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array("Starting dsExtDirectRouter.")));
     }
-    
+
     try
     {
       dsExtDirectRouter::handle();
@@ -79,12 +79,12 @@ class dsExtDirectController extends sfWebController
       echo $e->getMessage();
     }
   }
-  
+
   /**
    * Runs RPC actions
    *
    * @param mixed $cdata
-   * 
+   *
    * @return stdClass Response Object
    */
   public function invokeRpcAction($cdata)
@@ -95,10 +95,10 @@ class dsExtDirectController extends sfWebController
 
     //Load API Specs
     $api = dsExtDirectApi::getInstance();
-    
+
     // Response object
     $response = new stdClass();
-    
+
     try
     {
       // Fetch action (in symfony: a 'module')
@@ -106,21 +106,21 @@ class dsExtDirectController extends sfWebController
       if(isset($api[$action]))
       {
         $apiAction = $api[$action];
-        
+
         //Actual symfony name of action (if overridden by extdirect-action)
         $realAction = isset($api[$action]['action']) ? $api[$action]['action'] : $action;
       }
-      else 
+      else
       {
         throw new Exception('Call to undefined action: ' . $action);
       }
-      
+
       // Fetch method (in symfony: an 'action')
       $method = $cdata->method;
       if(isset($apiAction['methods'][$method]))
       {
         $apiMethod = $apiAction['methods'][$method];
-        
+
         //Actual symfony name of method (if overridden by extdirect-method)
         $realMethod = isset($apiAction['method_map'][$method]) ? $apiAction['method_map'][$method] : $apiMethod;
       }
@@ -128,37 +128,40 @@ class dsExtDirectController extends sfWebController
       {
         throw new Exception("Call to undefined method: $method on action: $action");
       }
-      
+
       $response->type = 'rpc';
       $response->tid = isset($cdata->tid) ? $cdata->tid : null;
       $response->action = $action;
       $response->method = $method;
-      
+
       //Populate request parameters
       if(!dsExtDirectRouter::isForm())
       {
         $this->context->getRequest()->getParameterHolder()->clear();
-        
+
         if(isset($cdata->data) && is_array($cdata->data))
         {
           //Create _raw request parameter for full access to request data
-          $this->context->getRequest()->setParameter('_raw', $cdata->data); 
+          $this->context->getRequest()->setParameter('_raw', $cdata->data);
           
           //Parse object literals into key/val pairs
-          foreach ($cdata->data[0] as $key => $val) 
-		  { 
-		    $this->context->getRequest()->setParameter($key, $val); 
+          if(!empty($cdata->data[0]))
+          {
+            foreach ($cdata->data[0] as $key => $val)
+            {
+              $this->context->getRequest()->setParameter($key, $val);
+            }
           }
         }
       }
-      
+
       //Call symfony action
       if (sfConfig::get('sf_logging_enabled'))
       {
         $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array(sprintf('Forwarding to "%s/%s".', $realAction, $realMethod))));
       }
       $this->forward($realAction, $realMethod);
-      
+
       $response->result = $this->getResult($realMethod, $realAction);
     }
     catch (sfStopException $e)
@@ -178,10 +181,10 @@ class dsExtDirectController extends sfWebController
     {
       $response = $this->generateException($response, $e);
     }
-    
+
     return $response;
   }
-  
+
   /**
    * Gets the result data via the defined result adapter
    *
@@ -193,16 +196,16 @@ class dsExtDirectController extends sfWebController
   {
     //Get the action
     $actionInstance = $this->getActionStack()->getLastEntry()->getActionInstance();
-      
+
     //Throw an exception if we've reached the 404 module
     if($actionInstance->getModuleName() == sfConfig::get('sf_error_404_module') && $actionInstance->getActionName() == sfConfig::get('sf_error_404_action'))
     {
       throw new sfError404Exception("Call to undefined method: $method on action: $action");
     }
-    
+
     return $this->getResultAdapter()->getResult($actionInstance);
   }
-  
+
   /**
    * Generates an exception response object in an Ext.Direct-friendly format
    *
@@ -214,11 +217,13 @@ class dsExtDirectController extends sfWebController
   {
     $response->type = 'exception';
 
-    if(sfConfig::get('sf_debug')) { // show the trace and message only if we are debugging
-        
+    if(sfConfig::get('sf_debug'))
+    { // show the trace and message only if we are debugging
+
       $response->message = $e->getMessage();
-        
-      if(sfConfig::get('app_ds_ext_direct_plugin_full_exceptions')) { 
+
+      if(sfConfig::get('app_ds_ext_direct_plugin_full_exceptions'))
+      {
         // fancy exceptions will have the 'where' field structured thus:
         // where: [{
         //          file: file name,
@@ -239,10 +244,10 @@ class dsExtDirectController extends sfWebController
       $response->message = null;
       $response->where = null;
     }
-    
+
     return $response;
   }
-  
+
   /**
    * Redirect not supported
    *
@@ -250,9 +255,9 @@ class dsExtDirectController extends sfWebController
    */
   public function redirect($url, $delay = 0, $statusCode = 302)
   {
-    
+
   }
-  
+
 }
 
 ?>
