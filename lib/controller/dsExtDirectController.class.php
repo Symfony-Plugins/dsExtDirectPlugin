@@ -145,7 +145,7 @@ class dsExtDirectController extends sfWebController
           $this->context->getRequest()->setParameter('_raw', $cdata->data);
           
           //Parse object literals into key/val pairs
-          if(!is_scalar($cdata->data[0]))
+          if(!empty($cdata->data[0]) && !is_scalar($cdata->data[0]))
           {
             foreach ($cdata->data[0] as $key => $val)
             {
